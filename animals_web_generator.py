@@ -8,30 +8,39 @@ def load_data(file_path):
 
 
 def main():
-    # Daten laden
+    # 1. Daten laden
     animals_data = load_data('animals_data.json')
 
-    # Durch die Tiere iterieren
+    # 2. String mit den Tierdaten erzeugen (wie in Schritt 1, aber als String)
+    output = ''
     for animal in animals_data:
-        # 1. Name ausgeben (immer vorhanden laut JSON)
         if "name" in animal:
-            print(f"Name: {animal['name']}")
+            output += f"Name: {animal['name']}\n"
 
-        # 2. Ernährung (Diet) - liegt innerhalb von 'characteristics'
         characteristics = animal.get("characteristics", {})
         if "diet" in characteristics:
-            print(f"Diet: {characteristics['diet']}")
+            output += f"Diet: {characteristics['diet']}\n"
 
-        # 3. Den ersten Ort aus der Liste 'locations'
         if "locations" in animal and len(animal["locations"]) > 0:
-            print(f"Location: {animal['locations'][0]}")
+            output += f"Location: {animal['locations'][0]}\n"
 
-        # 4. Typ (Type) - ebenfalls in 'characteristics'
         if "type" in characteristics:
-            print(f"Type: {characteristics['type']}")
+            output += f"Type: {characteristics['type']}\n"
 
-        # Leerzeile für die Lesbarkeit zwischen den Tieren
-        print("")
+        output += "\n"  # Leerzeile für den Abstand im Text
+
+    # 3. Inhalt der Vorlage (Template) lesen
+    with open("animals_template.html", "r") as f:
+        template_content = f.read()
+
+    # 4. Platzhalter __REPLACE_ANIMALS_INFO__ durch Tierdaten ersetzen
+    new_html_content = template_content.replace("__REPLACE_ANIMALS_INFO__", output)
+
+    # 5. Den neuen HTML-Inhalt in die Datei 'animals.html' schreiben
+    with open("animals.html", "w") as f:
+        f.write(new_html_content)
+
+    print("Die Datei animals.html wurde erfolgreich erstellt!")
 
 
 if __name__ == "__main__":
